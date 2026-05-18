@@ -1,0 +1,6 @@
+@FactoryFloor.IdentityService_HostAddress = http://localhost:5176
+
+GET {{FactoryFloor.IdentityService_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

@@ -1,0 +1,11 @@
+D:\Azure\FactoryFloor\src\shared\contracts\FactoryFloor.Contracts\bin\Debug\net10.0\FactoryFloor.Contracts.deps.json
+D:\Azure\FactoryFloor\src\shared\contracts\FactoryFloor.Contracts\bin\Debug\net10.0\FactoryFloor.Contracts.dll
+D:\Azure\FactoryFloor\src\shared\contracts\FactoryFloor.Contracts\bin\Debug\net10.0\FactoryFloor.Contracts.pdb
+D:\Azure\FactoryFloor\src\shared\contracts\FactoryFloor.Contracts\obj\Debug\net10.0\FactoryFloor.Contracts.GeneratedMSBuildEditorConfig.editorconfig
+D:\Azure\FactoryFloor\src\shared\contracts\FactoryFloor.Contracts\obj\Debug\net10.0\FactoryFloor.Contracts.AssemblyInfoInputs.cache
+D:\Azure\FactoryFloor\src\shared\contracts\FactoryFloor.Contracts\obj\Debug\net10.0\FactoryFloor.Contracts.AssemblyInfo.cs
+D:\Azure\FactoryFloor\src\shared\contracts\FactoryFloor.Contracts\obj\Debug\net10.0\FactoryFloor.Contracts.csproj.CoreCompileInputs.cache
+D:\Azure\FactoryFloor\src\shared\contracts\FactoryFloor.Contracts\obj\Debug\net10.0\FactoryFloor.Contracts.dll
+D:\Azure\FactoryFloor\src\shared\contracts\FactoryFloor.Contracts\obj\Debug\net10.0\refint\FactoryFloor.Contracts.dll
+D:\Azure\FactoryFloor\src\shared\contracts\FactoryFloor.Contracts\obj\Debug\net10.0\FactoryFloor.Contracts.pdb
+D:\Azure\FactoryFloor\src\shared\contracts\FactoryFloor.Contracts\obj\Debug\net10.0\ref\FactoryFloor.Contracts.dll
