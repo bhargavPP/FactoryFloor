@@ -1,19 +1,20 @@
 <Solution>
   <Folder Name="/gateway/">
-    <Project Path="gateway/FactoryFloor.Gateway/FactoryFloor.Gateway.csproj" />
+    <Project Path="D:/Azure/FactoryFloor/src/gateway/FactoryFloor.Gateway/FactoryFloor.Gateway.csproj" />
   </Folder>
   <Folder Name="/services/" />
   <Folder Name="/services/identity-service/">
-    <Project Path="services/identity-service/FactoryFloor.IdentityService/FactoryFloor.IdentityService.csproj" />
+    <File Path="Dockerfile" />
+    <Project Path="D:/Azure/FactoryFloor/src/services/identity-service/FactoryFloor.IdentityService/FactoryFloor.IdentityService.csproj" />
   </Folder>
   <Folder Name="/services/machine-service/">
-    <Project Path="services/machine-service/FactoryFloor.MachineService/FactoryFloor.MachineService.csproj" />
+    <Project Path="D:/Azure/FactoryFloor/src/services/machine-service/FactoryFloor.MachineService/FactoryFloor.MachineService.csproj" />
   </Folder>
   <Folder Name="/shared/" />
   <Folder Name="/shared/building-blocks/">
-    <Project Path="shared/building-blocks/FactoryFloor.BuildingBlocks/FactoryFloor.BuildingBlocks.csproj" />
+    <Project Path="D:/Azure/FactoryFloor/src/shared/building-blocks/FactoryFloor.BuildingBlocks/FactoryFloor.BuildingBlocks.csproj" />
   </Folder>
   <Folder Name="/shared/contracts/">
-    <Project Path="shared/contracts/FactoryFloor.Contracts/FactoryFloor.Contracts.csproj" />
+    <Project Path="D:/Azure/FactoryFloor/src/shared/contracts/FactoryFloor.Contracts/FactoryFloor.Contracts.csproj" />
   </Folder>
 </Solution>

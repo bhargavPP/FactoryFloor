@@ -42,7 +42,21 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<IdentityDbContext>();
-    db.Database.Migrate();
+    var retries = 5;
+    while (retries > 0)
+    {
+        try
+        {
+            db.Database.Migrate();
+            break;
+        }
+        catch (Exception ex)
+        {
+            retries--;
+            Console.WriteLine($"Migration failed, retries left: {retries}. Error: {ex.Message}");
+            Thread.Sleep(3000);
+        }
+    }
 }
 
 app.UseSwagger();
