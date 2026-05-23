@@ -13,6 +13,9 @@
   <Folder Name="/services/notification-service/">
     <Project Path="services/notification-service/FactoryFloor.NotificationService/FactoryFloor.NotificationService.csproj" />
   </Folder>
+  <Folder Name="/services/telemetry-service/">
+    <Project Path="services/telemetry-service/FactoryFloor.TelemetryService/FactoryFloor.TelemetryService.csproj" />
+  </Folder>
   <Folder Name="/shared/" />
   <Folder Name="/shared/building-blocks/">
     <Project Path="D:/Azure/FactoryFloor/src/shared/building-blocks/FactoryFloor.BuildingBlocks/FactoryFloor.BuildingBlocks.csproj" />

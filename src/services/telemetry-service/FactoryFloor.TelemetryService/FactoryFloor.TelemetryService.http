@@ -1,0 +1,6 @@
+@FactoryFloor.TelemetryService_HostAddress = http://localhost:5261
+
+GET {{FactoryFloor.TelemetryService_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

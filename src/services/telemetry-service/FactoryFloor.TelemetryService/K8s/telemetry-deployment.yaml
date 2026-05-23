@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: telemetry-service
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: telemetry-service
+  template:
+    metadata:
+      labels:
+        app: telemetry-service
+    spec:
+      containers:
+        - name: telemetry-service
+          image: factoryfloor-telemetry:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8080
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: "Production"
+            - name: MongoDB__ConnectionString
+              value: "mongodb://admin:admin123@mongodb-service:27017"
+            - name: MongoDB__DatabaseName
+              value: "factoryfloor_telemetry"
+            - name: RabbitMQ__Host
+              value: "rabbitmq-service"
+            - name: RabbitMQ__Username
+              value: "guest"
+            - name: RabbitMQ__Password
+              value: "guest"
+            - name: Jwt__Secret
+              value: "your-super-secret-key-minimum-32-characters-long!"
+            - name: Jwt__Issuer
+              value: "FactoryFloor"
+            - name: Jwt__Audience
+              value: "FactoryFloor"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: telemetry-service
+  namespace: default
+spec:
+  selector:
+    app: telemetry-service
+  ports:
+    - port: 80
+      targetPort: 8080
+  type: ClusterIP

@@ -2,9 +2,11 @@
   "ExpandedNodes": [
     "",
     "\\src",
-    "\\src\\services",
-    "\\src\\services\\machine-service",
-    "\\src\\services\\machine-service\\FactoryFloor.MachineService"
+    "\\src\\infrastructure",
+    "\\src\\infrastructure\\helm",
+    "\\src\\infrastructure\\helm\\factoryfloor",
+    "\\src\\infrastructure\\helm\\factoryfloor\\templates"
   ],
+  "SelectedNode": "\\src\\infrastructure\\helm\\factoryfloor\\templates\\machine-service.yaml",
   "PreviewInSolutionExplorer": false
 }
