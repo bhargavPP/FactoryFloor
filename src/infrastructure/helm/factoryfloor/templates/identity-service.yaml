@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: identity-service
+  namespace: {{ .Release.Namespace }}
+spec:
+  replicas: {{ .Values.identityService.replicas }}
+  selector:
+    matchLabels:
+      app: identity-service
+  template:
+    metadata:
+      labels:
+        app: identity-service
+    spec:
+      containers:
+        - name: identity-service
+          image: {{ .Values.identityService.image }}
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8080
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: "Production"
+            - name: ConnectionStrings__DefaultConnection
+              valueFrom:
+                secretKeyRef:
+                  name: identity-secrets
+                  key: connection-string
+            - name: Jwt__Secret
+              valueFrom:
+                secretKeyRef:
+                  name: identity-secrets
+                  key: jwt-secret
+            - name: Jwt__Issuer
+              value: {{ .Values.global.jwtIssuer | quote }}
+            - name: Jwt__Audience
+              value: {{ .Values.global.jwtAudience | quote }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: identity-service
+  namespace: {{ .Release.Namespace }}
+spec:
+  selector:
+    app: identity-service
+  ports:
+    - port: 80
+      targetPort: 8080
+  type: ClusterIP

@@ -1,0 +1,6 @@
+<Project>
+  <ItemGroup>
+    <PackageReference Update="MassTransit" Version="8.3.6" />
+    <PackageReference Update="MassTransit.RabbitMQ" Version="8.3.6" />
+  </ItemGroup>
+</Project>

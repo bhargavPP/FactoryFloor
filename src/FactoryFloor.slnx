@@ -10,6 +10,9 @@
   <Folder Name="/services/machine-service/">
     <Project Path="D:/Azure/FactoryFloor/src/services/machine-service/FactoryFloor.MachineService/FactoryFloor.MachineService.csproj" />
   </Folder>
+  <Folder Name="/services/notification-service/">
+    <Project Path="services/notification-service/FactoryFloor.NotificationService/FactoryFloor.NotificationService.csproj" />
+  </Folder>
   <Folder Name="/shared/" />
   <Folder Name="/shared/building-blocks/">
     <Project Path="D:/Azure/FactoryFloor/src/shared/building-blocks/FactoryFloor.BuildingBlocks/FactoryFloor.BuildingBlocks.csproj" />

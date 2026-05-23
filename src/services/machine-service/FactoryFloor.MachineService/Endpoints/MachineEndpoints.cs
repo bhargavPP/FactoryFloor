@@ -2,6 +2,8 @@
 using FactoryFloor.MachineService.DTOs;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
+using FactoryFloor.Contracts;
+using MassTransit;
 
 namespace FactoryFloor.MachineService.Endpoints
 {
@@ -60,7 +62,7 @@ namespace FactoryFloor.MachineService.Endpoints
                machine.Status.ToString(), machine.InstalledAt,
                machine.LastMaintenanceAt, machine.NextMaintenanceAt));
         }
-        private static async Task<IResult> CreateMachine(CreateMachineRequest request, MachineDbContext db, ClaimsPrincipal user)
+        private static async Task<IResult> CreateMachine(CreateMachineRequest request, MachineDbContext db, ClaimsPrincipal user, IPublishEndpoint publishEndpoint)
         {
             var tenantId = GetTenantId(user);
             if (await db.Machines.AnyAsync(m =>
@@ -79,6 +81,18 @@ namespace FactoryFloor.MachineService.Endpoints
             };
             db.Machines.Add(machine);
             await db.SaveChangesAsync();
+
+            // Publish event to RabbitMQ
+            await publishEndpoint.Publish(new MachineCreatedEvent
+            {
+                MachineId = machine.Id,
+                TenantId = machine.TenantId,
+                MachineName = machine.Name,
+                SerialNumber = machine.SerialNumber,
+                Location = machine.Location,
+                CreatedAt = machine.CreatedAt
+            });
+
             return Results.Created($"/api/machines/{machine.Id}", new MachineResponse(
                 machine.Id, machine.Name, machine.SerialNumber,
                 machine.Model, machine.Manufacturer, machine.Location,

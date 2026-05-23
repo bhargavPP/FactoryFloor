@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: notification-service
+  namespace: {{ .Release.Namespace }}
+spec:
+  replicas: {{ .Values.notificationService.replicas }}
+  selector:
+    matchLabels:
+      app: notification-service
+  template:
+    metadata:
+      labels:
+        app: notification-service
+    spec:
+      containers:
+        - name: notification-service
+          image: {{ .Values.notificationService.image }}
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8080
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: "Production"
+            - name: RabbitMQ__Host
+              value: "rabbitmq-service"
+            - name: RabbitMQ__Username
+              value: {{ .Values.rabbitmq.username | quote }}
+            - name: RabbitMQ__Password
+              value: {{ .Values.rabbitmq.password | quote }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: notification-service
+  namespace: {{ .Release.Namespace }}
+spec:
+  selector:
+    app: notification-service
+  ports:
+    - port: 80
+      targetPort: 8080
+  type: ClusterIP

@@ -1,0 +1,90 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: machine-service
+  namespace: {{ .Release.Namespace }}
+spec:
+  replicas: {{ .Values.machineService.replicas }}
+  selector:
+    matchLabels:
+      app: machine-service
+  template:
+    metadata:
+      labels:
+        app: machine-service
+    spec:
+      containers:
+        - name: machine-service
+          image: {{ .Values.machineService.image }}
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8080
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "500m"
+              memory: "256Mi"
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: "Production"
+            - name: ConnectionStrings__DefaultConnection
+              valueFrom:
+                secretKeyRef:
+                  name: machine-secrets
+                  key: connection-string
+            - name: Jwt__Secret
+              valueFrom:
+                secretKeyRef:
+                  name: machine-secrets
+                  key: jwt-secret
+            - name: Jwt__Issuer
+              value: {{ .Values.global.jwtIssuer | quote }}
+            - name: Jwt__Audience
+              value: {{ .Values.global.jwtAudience | quote }}
+            - name: RabbitMQ__Host
+              value: "rabbitmq-service"
+            - name: RabbitMQ__Username
+              value: {{ .Values.rabbitmq.username | quote }}
+            - name: RabbitMQ__Password
+              value: {{ .Values.rabbitmq.password | quote }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: machine-service
+  namespace: {{ .Release.Namespace }}
+spec:
+  selector:
+    app: machine-service
+  ports:
+    - port: 80
+      targetPort: 8080
+  type: ClusterIP
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: machine-service-hpa
+  namespace: {{ .Release.Namespace }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: machine-service
+  minReplicas: {{ .Values.machineService.hpa.minReplicas }}
+  maxReplicas: {{ .Values.machineService.hpa.maxReplicas }}
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.machineService.hpa.cpuThreshold }}
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.machineService.hpa.memoryThreshold }}

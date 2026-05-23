@@ -6,7 +6,7 @@ FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /src
 
 COPY ["services/machine-service/FactoryFloor.MachineService/FactoryFloor.MachineService.csproj","services/machine-service/FactoryFloor.MachineService/"]
-
+COPY ["shared/contracts/FactoryFloor.Contracts/FactoryFloor.Contracts.csproj","shared/contracts/FactoryFloor.Contracts/"]
 RUN dotnet restore "services/machine-service/FactoryFloor.MachineService/FactoryFloor.MachineService.csproj"
 
 COPY . .

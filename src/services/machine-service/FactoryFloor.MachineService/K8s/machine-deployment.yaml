@@ -15,10 +15,17 @@ spec:
     spec:
       containers:
         - name: machine-service
-          image: factoryfloor-machine:v1
+          image: factoryfloor-machine:latest
           imagePullPolicy: Never
           ports:
             - containerPort: 8080
+          resources:
+            limits:
+              cpu: "500m"
+              memory: "256Mi"
+            requests: 
+              cpu: "100m"
+              memory: "128Mi"
           env:
             - name: ASPNETCORE_ENVIRONMENT
               value: "Production"
@@ -36,3 +43,9 @@ spec:
               value: "FactoryFloor"
             - name: Jwt__Audience
               value: "FactoryFloor"
+            - name: RabbitMQ__Host
+              value: "rabbitmq-service"
+            - name: RabbitMQ__Username
+              value: "guest"
+            - name: RabbitMQ__Password
+              value: "guest"
