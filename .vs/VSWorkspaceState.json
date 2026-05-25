@@ -2,11 +2,12 @@
   "ExpandedNodes": [
     "",
     "\\src",
-    "\\src\\infrastructure",
-    "\\src\\infrastructure\\helm",
-    "\\src\\infrastructure\\helm\\factoryfloor",
-    "\\src\\infrastructure\\helm\\factoryfloor\\templates"
+    "\\src\\services",
+    "\\src\\services\\machine-service",
+    "\\src\\services\\telemetry-service",
+    "\\src\\services\\telemetry-service\\FactoryFloor.TelemetryService",
+    "\\src\\services\\telemetry-service\\FactoryFloor.TelemetryService\\Consumers"
   ],
-  "SelectedNode": "\\src\\infrastructure\\helm\\factoryfloor\\templates\\machine-service.yaml",
+  "SelectedNode": "\\src\\services\\telemetry-service\\FactoryFloor.TelemetryService\\Program.cs",
   "PreviewInSolutionExplorer": false
 }

@@ -1,3 +1,14 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
 apiVersion: apps/v1
 kind: Deployment
 
@@ -44,7 +55,8 @@ spec:
 
       volumes:
         - name: postgres-storage
-          emptyDir: {}
+          persistentVolumeClaim:
+            claimName: postgres-pvc
 
 ---
 apiVersion: v1

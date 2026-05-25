@@ -21,10 +21,10 @@ public static class AuthEndpoints
     private static async Task<IResult> RegisterTenant(RegisterTenantRequest request,IdentityDbContext db,ITokenService tokenService)
     {
         // Check slug is unique
-        if (await db.Tenants.AnyAsync(t => t.Slug.ToLowerInvariant() == request.TenantSlug.ToLowerInvariant()))
+        if (await db.Tenants.AnyAsync(t => t.Slug.ToLower() == request.TenantSlug.ToLower()))
             return Results.Conflict("Tenant slug already exists.");
         // Check email is unique
-        if (await db.Users.AnyAsync(u => u.Email.ToLowerInvariant() == request.AdminEmail.ToLowerInvariant()))
+        if (await db.Users.AnyAsync(u => u.Email.ToLower() == request.AdminEmail.ToLower()))
             return Results.Conflict("Email already registered.");
 
         var tenant = new Tenant
@@ -63,7 +63,7 @@ public static class AuthEndpoints
         ITokenService tokenService)
     {
         var tenant = await db.Tenants
-            .FirstOrDefaultAsync(t => t.Slug.ToLowerInvariant() == request.TenantSlug.ToLowerInvariant());
+            .FirstOrDefaultAsync(t => t.Slug.ToLower() == request.TenantSlug.ToLower());
 
         if (tenant is null)
             return Results.NotFound("Tenant not found.");

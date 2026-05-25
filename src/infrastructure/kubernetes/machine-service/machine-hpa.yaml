@@ -1,0 +1,41 @@
+# HPA configuration for machine-service
+apiVersion: autoscaling/v2
+
+kind: HorizontalPodAutoscaler
+
+metadata:
+  # Name of autoscaler
+  name: machine-service-hpa
+
+  # Kubernetes namespace
+  namespace: default
+
+spec:
+  # Deployment to scale
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: machine-service
+
+  # Minimum pods always running
+  minReplicas: 1
+
+  # Maximum pods allowed
+  maxReplicas: 5
+
+  metrics:
+    # Scale based on CPU
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 50
+
+    # Scale based on Memory
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: 70
