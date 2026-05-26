@@ -15,10 +15,31 @@ rabbitmq:
   password: guest
   replicas: 1
 
+mongodb:
+  image: mongo:7
+  username: admin
+  password: admin123
+  database: factoryfloor_telemetry
+  replicas: 1
+  storage: 1Gi
+ 
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "250m"
+
+    limits:
+      memory: "512Mi"
+      cpu: "500m"
 identityService:
   image: factoryfloor-identity:latest
   replicas: 1
   database: factoryfloor_identity
+
+telemetryService:
+  image: factoryfloor-telemetry:latest
+  replicas: 1
+  database: factoryfloor_telemetry
 
 machineService:
   image: factoryfloor-machine:latest

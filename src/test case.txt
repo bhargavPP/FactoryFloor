@@ -1,0 +1,198 @@
+minikube image build -t factoryfloor-gateway:latest -f gateway/FactoryFloor.Gateway/Dockerfile .
+minikube image build -t factoryfloor-identity:latest -f services/identity-service/FactoryFloor.IdentityService/Dockerfile .
+minikube image build -t factoryfloor-machine:latest -f services/machine-service/FactoryFloor.MachineService/Dockerfile .
+minikube image build -t factoryfloor-notification:latest -f services/notification-service/FactoryFloor.NotificationService/Dockerfile .
+
+minikube image build -t factoryfloor-telemetry:latest -f services/telemetry-service/FactoryFloor.TelemetryService/Dockerfile .
+
+
+Invoke-RestMethod -Method Post `
+  -Uri "http://localhost:8080/api/auth/register" `
+  -ContentType "application/json" `
+  -Body '{
+    "tenantName": "Acme Manufacturing",
+    "tenantSlug": "acme-manufacturing",
+    "adminEmail": "admin@acme.com",
+    "adminPassword": "Admin@123456",
+    "firstName": "John",
+    "lastName": "Smith"
+  }'
+
+$token = $response.accessToken
+
+
+$login = Invoke-RestMethod -Method Post `
+  -Uri "http://api.factoryfloor.local/api/auth/login" `
+  -ContentType "application/json" `
+  -Body '{
+    "email":"admin@acme.com",
+    "password":"Admin@123456",
+    "tenantSlug":"acme-manufacturing"
+}'
+
+$token = $login.accessToken
+
+$machine = Invoke-RestMethod -Method Post `
+  -Uri "http://api.factoryfloor.local/api/machines" `
+  -Headers @{ Authorization = "Bearer $token" } `
+  -ContentType "application/json" `
+  -Body '{
+    "name":"CNC Machine A1",
+    "serialNumber":"CNC-1001",
+    "manufacturer":"Siemens",
+    "model":"840D",
+    "status":"Running",
+    "location":"Plant 1",
+    "installedAt":"2026-01-01T00:00:00Z",
+    "lastMaintenanceAt":"2026-05-01T00:00:00Z",
+    "nextMaintenanceAt":"2026-06-01T00:00:00Z"
+}'
+Invoke-RestMethod -Method Get `
+  -Uri "http://api.factoryfloor.local/api/machines" `
+  -Headers @{
+      Authorization = "Bearer $token"
+  }
+
+
+----------------------Telemtry service test------------------------------
+Terminal 1 — watch telemetry logs:
+powershellkubectl logs deployment/telemetry-service -f
+Terminal 2 — run the full flow:
+
+# Step 1 - Login
+$response = Invoke-RestMethod -Method Post `
+  -Uri "http://api.factoryfloor.local/api/auth/login" `
+  -ContentType "application/json" `
+  -Body '{"email":"admin@acme.com","password":"Admin@123456","tenantSlug":"acme-manufacturing"}'
+
+$token = $response.accessToken
+$machineId = "bf53aeab-e888-4426-926b-1d5e93fbab4b"
+
+# Step 2 - Set threshold for temperature
+Invoke-RestMethod -Method Post `
+  -Uri "http://api.factoryfloor.local/api/telemetry/thresholds" `
+  -ContentType "application/json" `
+  -Headers @{Authorization = "Bearer $token"} `
+  -Body "{
+    `"machineId`": `"$machineId`",
+    `"machineName`": `"CNC Machine 1`",
+    `"metricName`": `"Temperature`",
+    `"warningThreshold`": 75.0,
+    `"criticalThreshold`": 90.0,
+    `"unit`": `"C`"
+  }"
+
+# Step 3 - Send normal reading (below threshold)
+Invoke-RestMethod -Method Post `
+  -Uri "http://api.factoryfloor.local/api/telemetry/ingest" `
+  -ContentType "application/json" `
+  -Headers @{Authorization = "Bearer $token"} `
+  -Body "{
+    `"machineId`": `"$machineId`",
+    `"metricName`": `"Temperature`",
+    `"value`": 65.0,
+    `"unit`": `"C`"
+  }"
+
+Write-Host "Normal reading sent - no alert expected"
+
+# Step 4 - Send warning reading
+Invoke-RestMethod -Method Post `
+  -Uri "http://api.factoryfloor.local/api/telemetry/ingest" `
+  -ContentType "application/json" `
+  -Headers @{Authorization = "Bearer $token"} `
+  -Body "{
+    `"machineId`": `"$machineId`",
+    `"metricName`": `"Temperature`",
+    `"value`": 78.0,
+    `"unit`": `"C`"
+  }"
+
+Write-Host "Warning reading sent - WARNING alert expected"
+
+# Step 5 - Send critical reading
+Invoke-RestMethod -Method Post `
+  -Uri "http://api.factoryfloor.local/api/telemetry/ingest" `
+  -ContentType "application/json" `
+  -Headers @{Authorization = "Bearer $token"} `
+  -Body "{
+    `"machineId`": `"$machineId`",
+    `"metricName`": `"Temperature`",
+    `"value`": 95.0,
+    `"unit`": `"C`"
+  }"
+
+Write-Host "Critical reading sent - CRITICAL alert expected"
+-----------------------------26 may 2026---------------------------
+✅ Identity Service       — JWT, multi-tenant auth
+✅ Machine Service        — CRUD, events, HPA autoscaling
+✅ Notification Service   — RabbitMQ event consumer
+✅ Telemetry Service      — readings, thresholds, alerts
+✅ API Gateway            — YARP single entry point
+✅ Kubernetes Ingress     — domain routing
+✅ RabbitMQ               — event-driven messaging
+✅ PostgreSQL             — relational persistent storage
+✅ MongoDB                — time-series telemetry storage
+✅ Kubernetes Secrets     — secure config
+✅ HPA                    — autoscaling under load
+✅ Helm Charts            — one command deployment
+
+What's Next — Observability
+Now that you have real traffic, real queues, and real scaling — observability will show you everything happening inside your cluster visually.
+You'll get:
+-------------------------------------------------------------------------------
+
+
+STEP 1 — Install Metrics Server
+
+Right now your HPA shows:
+
+cpu: <unknown>
+
+because Kubernetes has no metrics provider.
+
+Install Metrics Server
+
+Run:
+
+minikube addons enable metrics-server
+
+Wait 1–2 minutes.
+
+Verify
+kubectl get pods -n kube-system
+
+Look for:
+
+metrics-server
+
+Running.
+
+Test Metrics
+
+Run:
+
+kubectl top pods
+
+Now you’ll see:
+
+CPU
+MEMORY
+
+for each pod.
+
+This fixes:
+
+HPA autoscaling metrics
+STEP 2 — Install Prometheus + Grafana
+
+Best approach:
+
+Helm
+
+because your platform already uses Helm.
+
+Add Helm Repo
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+Update Repo
+helm repo update

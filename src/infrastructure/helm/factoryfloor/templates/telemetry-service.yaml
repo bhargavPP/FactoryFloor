@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: telemetry-service
+  namespace: default
+
+spec:
+  replicas: {{ .Values.telemetryService.replicas }}
+
+  selector:
+    matchLabels:
+      app: telemetry-service
+
+  template:
+    metadata:
+      labels:
+        app: telemetry-service
+
+    spec:
+      containers:
+        - name: telemetry-service
+
+          image: "{{ .Values.telemetryService.image }}"
+
+          imagePullPolicy: Never
+
+          ports:
+            - containerPort: 8080
+
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: "Production"
+
+            - name: ASPNETCORE_URLS
+              value: "http://+:8080"
+
+            - name: MongoDB__ConnectionString
+              value: "mongodb://{{ .Values.mongodb.username }}:{{ .Values.mongodb.password }}@mongodb-service:27017"
+
+            - name: MongoDB__DatabaseName
+              value: "{{ .Values.mongodb.database }}"
+
+            - name: RabbitMQ__Host
+              value: "rabbitmq-service"
+
+            - name: RabbitMQ__Username
+              value: "{{ .Values.rabbitmq.username }}"
+
+            - name: RabbitMQ__Password
+              value: "{{ .Values.rabbitmq.password }}"
+
+            - name: Jwt__Secret
+              value: "{{ .Values.global.jwtSecret }}"
+
+            - name: Jwt__Issuer
+              value: "{{ .Values.global.jwtIssuer }}"
+
+            - name: Jwt__Audience
+              value: "{{ .Values.global.jwtAudience }}"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: telemetry-service
+  namespace: default
+
+spec:
+  selector:
+    app: telemetry-service
+
+  ports:
+    - port: 80
+      targetPort: 8080
+
+  type: ClusterIP
