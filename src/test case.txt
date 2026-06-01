@@ -6,7 +6,7 @@ minikube image build -t factoryfloor-notification:latest -f services/notificatio
 minikube image build -t factoryfloor-telemetry:latest -f services/telemetry-service/FactoryFloor.TelemetryService/Dockerfile .
 
 
-Invoke-RestMethod -Method Post `
+ $response = Invoke-RestMethod -Method Post `
   -Uri "http://localhost:8080/api/auth/register" `
   -ContentType "application/json" `
   -Body '{
@@ -18,7 +18,7 @@ Invoke-RestMethod -Method Post `
     "lastName": "Smith"
   }'
 
-$token = $response.accessToken
+ 
 
 
 $login = Invoke-RestMethod -Method Post `
@@ -194,5 +194,20 @@ because your platform already uses Helm.
 
 Add Helm Repo
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm repo add grafana https://grafana.github.io/helm-charts
 Update Repo
 helm repo update
+
+Verify:
+powershellhelm repo list
+
+Step 2 — Install Prometheus Stack
+The kube-prometheus-stack chart installs Prometheus, Grafana, and Alertmanager together:
+powershellhelm install monitoring prometheus-community/kube-prometheus-stack `
+  --namespace monitoring `
+  --create-namespace `
+  --set prometheus.prometheusSpec.scrapeInterval="15s" `
+  --set grafana.adminPassword="admin123" `
+  --set grafana.service.type=NodePort
+This will take 2-3 minutes. Watch it:
+powershellkubectl get pods -n monitoring -w
