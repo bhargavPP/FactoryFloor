@@ -1,1 +1,14 @@
-<p>machines works!</p>
+<h1>Machines</h1>
+
+<div class="machine-grid">
+
+  <mat-card *ngFor="let machine of machines"
+            class="machine-card">
+
+    <h2>{{ machine.name }}</h2>
+
+    <p>Status: {{ machine.status }}</p>
+
+  </mat-card>
+
+</div>
