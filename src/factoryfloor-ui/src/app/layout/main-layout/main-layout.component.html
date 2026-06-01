@@ -1,1 +1,51 @@
-<p>main-layout works!</p>
+<mat-sidenav-container class="layout-container">
+
+  <mat-sidenav mode="side" opened class="sidebar">
+
+    <div class="logo">
+      FactoryFloor
+    </div>
+
+    <mat-nav-list>
+
+      <a mat-list-item routerLink="/">
+        <mat-icon>dashboard</mat-icon>
+        Dashboard
+      </a>
+
+      <a mat-list-item routerLink="/machines">
+        <mat-icon>precision_manufacturing</mat-icon>
+        Machines
+      </a>
+
+      <a mat-list-item routerLink="/telemetry">
+        <mat-icon>analytics</mat-icon>
+        Telemetry
+      </a>
+
+      <a mat-list-item routerLink="/alerts">
+        <mat-icon>warning</mat-icon>
+        Alerts
+      </a>
+
+    </mat-nav-list>
+
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+
+    <mat-toolbar color="primary">
+
+      <span>FactoryFloor Monitoring Platform</span>
+
+    </mat-toolbar>
+
+    <div class="page-content">
+
+      <router-outlet></router-outlet>
+
+    </div>
+
+  </mat-sidenav-content>
+
+</mat-sidenav-container>
