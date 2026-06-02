@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { MaterialModule } from '../../shared/material/material.module';
 
-import { Machine } from '../../models/machine.model';
+import { Machine } from '../../shared/models/machine.model';
 import { MachineService } from '../../services/machine.service';
 
 @Component({

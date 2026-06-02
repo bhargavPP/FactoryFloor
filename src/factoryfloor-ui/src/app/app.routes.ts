@@ -16,7 +16,9 @@ export const routes: Routes = [{
     { path: 'alerts', component: AlertsComponent },
     {
       path: 'login',
-      component: LoginComponent
+      loadComponent: () =>
+        import('./features/login/login.component')
+          .then(m => m.LoginComponent)
     },
   ]
 }

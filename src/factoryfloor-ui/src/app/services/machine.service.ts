@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Machine } from '../models/machine.model';
+import { Machine } from '../shared/models/machine.model';
 
 import { environment } from '../../environments/environment';
 
